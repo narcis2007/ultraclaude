@@ -1,0 +1,42 @@
+{
+  "name": "ultraclaude",
+  "version": "0.1.0",
+  "description": "Ask a local Claude Code CLI for structured, read-only second opinions while Codex orchestrates.",
+  "author": {
+    "name": "Narcis Ciobotariu",
+    "email": "narcisc2007@gmail.com",
+    "url": "https://github.com/narcis2007"
+  },
+  "homepage": "https://github.com/narcis2007/ultraclaude",
+  "repository": "https://github.com/narcis2007/ultraclaude",
+  "license": "Apache-2.0",
+  "keywords": [
+    "claude-code",
+    "cross-model",
+    "second-opinion",
+    "verification",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ultraclaude",
+    "shortDescription": "Structured second opinions from Claude Code",
+    "longDescription": "Let Codex consult the user's local Claude Code CLI as an independent, read-only reviewer with schema-validated output and explicit failure handling.",
+    "developerName": "Narcis Ciobotariu",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read"
+    ],
+    "websiteURL": "https://github.com/narcis2007/ultraclaude",
+    "privacyPolicyURL": "https://github.com/narcis2007/ultraclaude/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/narcis2007/ultraclaude/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "Ask Claude to adversarially review this change.",
+      "Get Claude's read-only opinion on this conclusion.",
+      "Have Claude judge these alternatives independently."
+    ],
+    "brandColor": "#6D5AE6",
+    "composerIcon": "./assets/ultraclaude.svg",
+    "logo": "./assets/ultraclaude.svg"
+  }
+}

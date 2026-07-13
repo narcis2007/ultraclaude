@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Workflow"
+  short_description: "Ask Claude for structured second opinions"
+  default_prompt: "Use $claude-workflow to get a read-only, adversarial second opinion from Claude."

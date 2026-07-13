@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Ultraclaude</title>
+  <rect width="512" height="512" rx="112" fill="#17152B"/>
+  <path d="M190 142h-42c-20 0-36 16-36 36v156c0 20 16 36 36 36h42" fill="none" stroke="#9B8CFF" stroke-width="32" stroke-linecap="round"/>
+  <path d="M322 142h42c20 0 36 16 36 36v156c0 20-16 36-36 36h-42" fill="none" stroke="#F4A261" stroke-width="32" stroke-linecap="round"/>
+  <path d="M206 196v76c0 30 20 50 50 50s50-20 50-50v-76" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round"/>
+</svg>

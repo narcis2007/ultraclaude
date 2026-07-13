@@ -1,0 +1,47 @@
+{
+  "name": "ultraclaude",
+  "version": "0.1.0",
+  "description": "Codex plugin and CLI relay for structured, read-only Claude Code second opinions.",
+  "type": "module",
+  "exports": {
+    ".": "./skills/claude-workflow/scripts/claude-node.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "ultraclaude": "skills/claude-workflow/scripts/claude-node.mjs"
+  },
+  "files": [
+    ".codex-plugin/",
+    "assets/",
+    "skills/",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narcis2007/ultraclaude.git",
+    "directory": "plugins/ultraclaude"
+  },
+  "homepage": "https://github.com/narcis2007/ultraclaude#readme",
+  "bugs": {
+    "url": "https://github.com/narcis2007/ultraclaude/issues"
+  },
+  "keywords": [
+    "codex",
+    "codex-plugin",
+    "claude-code",
+    "cross-model",
+    "second-opinion",
+    "code-review"
+  ],
+  "author": "Narcis Ciobotariu <narcisc2007@gmail.com>",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
