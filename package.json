@@ -8,8 +8,8 @@
     "plugins/ultraclaude"
   ],
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
-    "test:coverage": "node --test --experimental-test-coverage tests/*.test.mjs",
+    "test": "node --test tests/claude-node.test.mjs tests/package.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage tests/claude-node.test.mjs tests/package.test.mjs",
     "preflight": "node plugins/ultraclaude/skills/claude-workflow/scripts/claude-node.mjs preflight --pretty",
     "dry-run": "node plugins/ultraclaude/skills/claude-workflow/scripts/claude-node.mjs dry-run --request tests/fixtures/request.json --pretty",
     "pack:check": "npm pack --workspace ultraclaude --dry-run --json"
