@@ -8,7 +8,9 @@ function windowsJob(pid) {
   { windowsHide: true, stdio: ["pipe", "pipe", "pipe"] });
   let message = "";
   const ready = new Promise(resolve => {
-    const timer = setTimeout(() => resolve(false), 5000);
+    // A cold PowerShell start (profile-less, but still loading .NET and the helper, slower under
+    // antivirus or on a busy CI runner) measured over 5 s; the bound only matters on failure.
+    const timer = setTimeout(() => resolve(false), 30000);
     helper.stdout.on("data", chunk => { message += chunk; if (message.includes("READY")) { clearTimeout(timer); resolve(true); } });
     helper.once("error", () => { clearTimeout(timer); resolve(false); });
     helper.once("exit", () => { clearTimeout(timer); resolve(false); });

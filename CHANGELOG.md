@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 - 2026-10-08
+
+- Windows: wait up to 30 s (was 5 s) for the Job Object helper to report ready before a
+  writer is refused as "Could not assign the Claude writer to a Windows Job Object" — a cold
+  PowerShell start took longer on GitHub's windows-latest runner.
+
 ## 0.2.2 - 2026-10-08
 
 - Windows: the state directory check no longer mistakes a real directory for a link when

@@ -1,6 +1,6 @@
 {
   "name": "ultraclaude",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Consult Claude, delegate isolated edits, and run structured cross-model workflows from Codex.",
   "author": {
     "name": "Narcis Ciobotariu",
