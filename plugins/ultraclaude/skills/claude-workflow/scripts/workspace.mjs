@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { createHash, randomBytes } from "node:crypto";
-import { mkdir, readFile, realpath, rename, stat, writeFile, unlink, rmdir } from "node:fs/promises";
+import { lstat, mkdir, readFile, realpath, rename, stat, writeFile, unlink, rmdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -10,8 +10,12 @@ export function stateDirectory(env = process.env) {
 export async function ensureState(env = process.env) {
   const root = stateDirectory(env);
   await mkdir(root, { recursive: true, mode: 0o700 });
-  if (path.resolve(await realpath(root)) !== root) throw new Error("State directory must not be a symlink or junction.");
-  return root;
+  // lstat, not a realpath comparison: a Windows 8.3 short name (C:\Users\RUNNER~1\...) or a linked
+  // parent makes realpath differ for a real directory. Node reports junctions as symbolic links.
+  // The canonical path is returned, so paths derived from it (leases, slots) equal their realpath.
+  const info = await lstat(root);
+  if (info.isSymbolicLink() || !info.isDirectory()) throw new Error("State directory must not be a symlink or junction.");
+  return await realpath(root);
 }
 export async function atomicJson(file, value) {
   await mkdir(path.dirname(file), { recursive: true, mode: 0o700 });

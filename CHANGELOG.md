@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 - 2026-10-08
+
+- Windows: the state directory check no longer mistakes a real directory for a link when
+  its path differs from its realpath (8.3 short names such as `C:\Users\RUNNER~1\...`, or a
+  linked parent). Only the directory itself must not be a symlink or junction, and the
+  canonical path is used for leases and slots — worktrees, jobs and leases failed with
+  "State directory must not be a symlink or junction" on such machines (and on CI).
+
 ## 0.2.1 - 2026-10-08
 
 - Light tier: Claude Haiku 5.5 at medium effort (was Haiku 4.5 without effort). On a code

@@ -14,7 +14,7 @@ import { runOwnedProcess } from "./owned-process.mjs";
 import { startJob, superviseJob, jobStatus, jobResult, waitJob, cancelJob } from "./jobs.mjs";
 import { planWorkflow, executeWorkflow } from "./workflows.mjs";
 
-export const SCRIPT_VERSION = "0.2.1";
+export const SCRIPT_VERSION = "0.2.2";
 export const DEFAULT_MODEL = "opus";
 export const DEFAULT_EFFORT = "max";
 export const DEFAULT_TIMEOUT_SEC = 300;

@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtemp, mkdir, readFile, rm, writeFile, symlink, rename } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, readdir, realpath, rm, writeFile, symlink, rename } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildClaudeArgs, validateRequest, executeRequest, summarizeClaudeResult, executeJobRequest, validateJobRequest } from "../plugins/ultraclaude/skills/claude-workflow/scripts/claude-node.mjs";
-import { git, prepareWorkspace, validateAllowedPaths, acquireWorkspaceLease, permissionPath } from "../plugins/ultraclaude/skills/claude-workflow/scripts/workspace.mjs";
+import { git, prepareWorkspace, validateAllowedPaths, acquireWorkspaceLease, permissionPath, ensureState } from "../plugins/ultraclaude/skills/claude-workflow/scripts/workspace.mjs";
 import { startJob, waitJob, cancelJob, jobStatus } from "../plugins/ultraclaude/skills/claude-workflow/scripts/jobs.mjs";
 import { planWorkflow, executeWorkflow } from "../plugins/ultraclaude/skills/claude-workflow/scripts/workflows.mjs";
 import { runOwnedProcess } from "../plugins/ultraclaude/skills/claude-workflow/scripts/owned-process.mjs";
@@ -137,6 +137,24 @@ test("creates a real isolated worktree, writes there, and keeps the source uncha
 test("rejects dirty source repositories instead of silently omitting changes", async t => {
   const { cwd, env } = await fixture(t, true); await writeFile(path.join(cwd, "input.txt"), "dirty");
   await assert.rejects(prepareWorkspace(validateRequest({ prompt: "p", cwd, mode: "implement" }), env), /uncommitted/);
+});
+test("a state directory reached through a linked parent works; a linked state directory is refused", async t => {
+  // Windows 8.3 short names (C:\Users\RUNNER~1\...) give the same mismatch between a real
+  // directory's path and its realpath that a linked parent gives on every platform.
+  const { root, cwd, env } = await fixture(t);
+  const real = path.join(root, "real"); await mkdir(real);
+  const alias = path.join(root, "alias"); await symlink(real, alias, "junction");
+  const viaAlias = { ...env, ULTRACLAUDE_STATE_DIR: path.join(alias, "state") };
+  const state = await ensureState(viaAlias);
+  assert.equal(state, await realpath(path.join(real, "state")));
+  // A stale lease under it is reclaimed, not mistaken for one another run owns.
+  const request = validateRequest({ prompt: "p", cwd, mode: "implement" });
+  await acquireWorkspaceLease(request, viaAlias);
+  const leases = path.join(state, "leases"); const [lease] = await readdir(leases);
+  await writeFile(path.join(leases, lease, "owner.json"), JSON.stringify({ pid: 2147483646, cwd, at: "2026-01-01T00:00:00Z" }));
+  await (await acquireWorkspaceLease(request, viaAlias))();
+  const linked = path.join(root, "linked-state"); await symlink(real, linked, "junction");
+  await assert.rejects(ensureState({ ...env, ULTRACLAUDE_STATE_DIR: linked }), /must not be a symlink or junction/);
 });
 test("leases a new worktree before exposing a persistent session", async t => {
   const { cwd, env } = await fixture(t, true);
