@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 - 2026-10-07
+
+- Opt-in edit/implement profiles, automatic git worktrees, and scoped file permissions.
+- Sonnet/Opus/Haiku/Fable routing, per-model effort validation, and usage provenance.
+- Bundled JSON Schema validation, presets, task files, and text answers.
+- Registered sessions, workspace leases, asynchronous jobs, cancellation, and process-tree cleanup.
+- Claude ask/review/implement skills and executable review, crosscheck, cross-review, and judge workflows.
+- Native Windows uses Codex for commands; shell tools require an available sandbox on Linux/WSL2/macOS.
+
 ## 0.1.0 - 2026-07-13
 
 - Initial Codex plugin and npm CLI release.

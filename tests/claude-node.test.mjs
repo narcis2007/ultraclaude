@@ -99,15 +99,17 @@ test("installs the documented Opus/max defaults", () => {
   assert.equal(request.persistSession, false);
 });
 
-test("accepts explicit cheap model and effort overrides", () => {
+test("omits effort for Haiku and accepts supported explicit effort overrides", () => {
   const request = validateRequest({
     prompt: "Cheap check.",
     cwd: repoRoot,
     model: "haiku",
-    effort: "low",
   });
   assert.equal(request.model, "haiku");
-  assert.equal(request.effort, "low");
+  assert.equal(request.effort, null);
+  assert.equal(buildClaudeArgs(request).includes("--effort"), false);
+  assert.throws(() => validateRequest({ prompt: "Check", model: "haiku", effort: "low" }), /not supported/);
+  assert.equal(validateRequest({ prompt: "Check", model: "sonnet", effort: "low" }).effort, "low");
 });
 
 test("rejects unknown, executable, and malformed request fields", () => {
@@ -260,7 +262,7 @@ test("runs a full structured request through a fake Claude executable", async ()
 
   assert.equal(result.ok, true);
   assert.equal(result.output.verdict, "mixed");
-  assert.equal(result.sessionId, "fixture-session-1");
+  assert.match(result.sessionId, /^[0-9a-f-]{36}$/);
   assert.equal(result.stats.turns, 1);
 });
 

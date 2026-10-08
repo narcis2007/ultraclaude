@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Implement"
+  short_description: "Delegate isolated edits to Claude from Codex"
+  default_prompt: "Use $claude-implement to build this task in an isolated worktree."

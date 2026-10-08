@@ -76,9 +76,9 @@ test("npm package is publishable and contains a valid plugin entry point", async
   }
 });
 
-test("plugin metadata exposes legal links and only the read capability class", async () => {
+test("plugin metadata declares the capabilities offered by v0.2", async () => {
   const plugin = await json("plugins/ultraclaude/.codex-plugin/plugin.json");
-  assert.deepEqual(plugin.interface.capabilities, ["Read"]);
+  assert.deepEqual(plugin.interface.capabilities, ["Read", "Write", "Execute"]);
   assert.match(plugin.interface.privacyPolicyURL, /^https:\/\//);
   assert.match(plugin.interface.termsOfServiceURL, /^https:\/\//);
   await access(path.join(pluginRoot, plugin.interface.logo));

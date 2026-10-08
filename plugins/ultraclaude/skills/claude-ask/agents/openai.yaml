@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ask Claude"
+  short_description: "Ask Claude one focused question from Codex"
+  default_prompt: "Use $claude-ask for an independent opinion on this conclusion."

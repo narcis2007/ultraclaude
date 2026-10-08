@@ -1,55 +1,45 @@
-# Cross-model workflow patterns
+# Executable workflow patterns
 
-## Adversarial second opinion
+The runner accepts these JSON objects through workflow --request or start --request.
+All workflow stages are read-only. Codex owns synthesis; Claude never calls Codex recursively.
 
-Use for one load-bearing Codex conclusion.
+## claude-review
 
-Prompt shape:
+```json
+{"workflow":"claude-review","cwd":"/absolute/repo","prompt":"Review the supplied diff and named files.","lenses":["code","security","tests"]}
+```
 
-    Codex concluded: <short conclusion>.
-    Try to refute it using independent inspection of <named files>.
-    Cite concrete evidence. If evidence is insufficient, return insufficient_evidence.
+Available lenses: code, security, tests, performance, domain. Ordinary lenses use daily; security
+uses final. Explicit tier/model/effort overrides take priority. Results include each stage's routing
+and evidence. Failed stages remain unverified. The default runs sequentially to bound usage.
 
-Run one Claude call at high effort, then have Codex reconcile the evidence.
+## crosscheck and cross-review
 
-## Finding verification
+```json
+{"workflow":"crosscheck","cwd":"/absolute/repo","claims":[{"id":"C1","text":"The counter increment is atomic."}]}
+```
 
-Batch related findings when they share the same files. Ask Claude to classify each stable finding
-identifier as confirmed, refuted, or unverified. Do not drop a finding when the relay fails.
+```json
+{"workflow":"cross-review","cwd":"/absolute/repo","findings":[{"id":"AUTH-1","text":"This handler accepts another tenant's record ID."}]}
+```
 
-Use a custom schema with:
+Claude verifies one batch of related claims/findings, citing files and lines. Exactly one result
+per supplied stable ID is required; missing, invented, or duplicate IDs fail closed. Codex then
+checks material findings and classifies confirmed/refuted/unverified. Escalate one consequential
+unresolved batch to final rather than repeating whole reviews.
 
-- results: array keyed by finding id
-- status: confirmed, refuted, or unverified
-- evidence: string
-- confidence: integer
+## judge-panel
 
-## Mixed judge panel
+```json
+{"workflow":"judge-panel","cwd":"/absolute/repo","rubric":"Correctness and operational simplicity","candidates":[{"id":"A","text":"Option A"},{"id":"B","text":"Option B"}],"codexScores":[{"id":"A","score":75},{"id":"B","score":65}]}
+```
 
-Generate candidates before judging. Ask Claude to score all candidates against the same explicit
-rubric. Codex should also score them independently.
-
-Rank only candidates that received both judgments. Do not compare a single-model score with a
-cross-model average.
+Obtain Codex's independent scores before passing them as codexScores. Claude sees candidates and
+the rubric, not Codex scores. Scores are 0..100. Only candidates with both judgments are ranked;
+others are unverifiedCandidates. Missing Codex judgments are never replaced with Claude-only means.
 
 ## Persistent dialogue
 
-Use only when Claude's first answer creates a concrete follow-up question.
-
-1. Start with persistSession:true.
-2. Save sessionId.
-3. Resume with a focused prompt and resumeSessionId.
-4. Stop after three Claude calls unless the user asks for a longer exchange.
-
-Never instruct Claude to contact Codex. Codex owns the exchange and passes only the next focused
-question.
-
-## Failure-closed synthesis
-
-Partition results into:
-
-- confirmed: schema-valid response with sufficient evidence
-- refuted: schema-valid response that disproves the claim
-- unverified: any relay failure, timeout, missing evidence, or insufficient_evidence verdict
-
-If a required review is unverified, report the final status as incomplete.
+For real follow-ups, make a normal request with persistSession:true and resume the registered
+session in the same workspace/scope. Keep the next question specific. Stop when there is no new
+evidence or the agreed call/budget limit is reached. Failures never imply agreement.

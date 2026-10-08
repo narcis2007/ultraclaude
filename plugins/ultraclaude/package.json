@@ -1,7 +1,7 @@
 {
   "name": "ultraclaude",
-  "version": "0.1.0",
-  "description": "Codex plugin and CLI relay for structured, read-only Claude Code second opinions.",
+  "version": "0.2.0",
+  "description": "Codex plugin and CLI for Claude consultation, isolated implementation, and workflows.",
   "type": "module",
   "exports": {
     ".": "./skills/claude-workflow/scripts/claude-node.mjs",
@@ -16,7 +16,8 @@
     "skills/",
     "LICENSE",
     "NOTICE",
-    "README.md"
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "engines": {
     "node": ">=18"

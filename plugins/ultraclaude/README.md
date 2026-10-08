@@ -1,34 +1,19 @@
-# ultraclaude
+# Ultraclaude 0.2
 
-Ultraclaude is a Codex plugin and a small command-line relay that asks the user's locally
-authenticated Claude Code CLI for structured, read-only second opinions.
+Claude Code inside Codex: consultation, independent review, isolated implementation, sessions,
+asynchronous jobs, and cross-model workflows. Codex verifies and owns the result.
 
-It defaults to Claude `opus` at `max` effort. Override both per request when a cheaper check is
-appropriate:
+Skills: claude-ask, claude-review, claude-implement, claude-workflow.
+Runner: skills/claude-workflow/scripts/claude-node.mjs (also the ultraclaude npm CLI).
 
-```json
-{
-  "prompt": "Review this conclusion and cite concrete evidence.",
-  "cwd": "C:\\absolute\\path\\to\\repo",
-  "model": "haiku",
-  "effort": "low",
-  "persistSession": false
-}
-```
+Default legacy requests stay read-only Opus/max. Typed daily requests use Sonnet 5.5/xhigh;
+final uses Opus 5.5/max; light uses Haiku without effort; deep explicitly selects Fable 5.1/xhigh.
+Account availability is not inferred from the catalog. Actual modelUsage is retained.
 
-After installing Claude Code and authenticating it, run:
+Writing is opt-in through mode:edit/implement and defaults to an isolated git worktree.
+Native Windows delegates build/test commands to Codex. Autonomous shell requires an available
+sandbox inside Linux/WSL2/macOS; no permission-bypass mode is offered.
 
-```sh
-npx ultraclaude preflight --pretty
-npx ultraclaude dry-run --request request.json --pretty
-npx ultraclaude run --request request.json --pretty
-```
-
-The relay enables Claude safe mode, removes write and shell tools, uses `dontAsk`, and requires
-JSON Schema output. A failed, timed-out, or malformed review is returned as unverified.
-
-For Codex plugin installation and the complete security model, see the
-[repository documentation](https://github.com/narcis2007/ultraclaude).
-
-Ultraclaude is an independent project and is not affiliated with, endorsed by, or maintained by
-Anthropic or OpenAI. Claude and Codex are trademarks of their respective owners.
+Run preflight and dry-run before live use. See the repository README and the skill references
+for full request contracts, job controls, and data handling. The bundled validator works without
+npm dependencies in a skills-only installation. See THIRD_PARTY_NOTICES.md.

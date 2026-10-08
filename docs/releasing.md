@@ -4,11 +4,11 @@
 
 1. Align the version in the root workspace, npm package, plugin manifest, relay constant,
    package lock, and changelog.
-2. Run `npm test`, `npm run test:coverage`, `npm run pack:check`, and `npm audit --omit=dev`.
-3. Run the official Codex skill and plugin validators.
+2. Run `npm test`, `npm run test:coverage`, `npm run build:check`, `npm run validate:plugin`, `npm run pack:check`, and `npm audit --omit=dev`.
+3. Run the available official Codex skill validator for all four skills and the repository plugin validator; use the official plugin validator too when installed.
 4. Install the generated tarball in an empty directory and execute `schema`, `preflight`, and
    `dry-run` through its generated npm bin shim.
-5. Run one explicitly approved live smoke test on Haiku/low.
+5. Run one explicitly approved live smoke test on Haiku without an effort field.
 
 ## npm
 

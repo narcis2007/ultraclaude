@@ -1,21 +1,28 @@
 {
   "name": "ultraclaude-workspace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Codex plugin for structured, read-only Claude Code second opinions.",
+  "description": "Codex plugin for Claude consultation, isolated implementation, sessions, and workflows.",
   "workspaces": [
     "plugins/ultraclaude"
   ],
   "scripts": {
-    "test": "node --test tests/claude-node.test.mjs tests/package.test.mjs",
-    "test:coverage": "node --test --experimental-test-coverage tests/claude-node.test.mjs tests/package.test.mjs",
+    "test": "node --test tests/claude-node.test.mjs tests/package.test.mjs tests/v02.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage tests/claude-node.test.mjs tests/package.test.mjs tests/v02.test.mjs",
     "preflight": "node plugins/ultraclaude/skills/claude-workflow/scripts/claude-node.mjs preflight --pretty",
     "dry-run": "node plugins/ultraclaude/skills/claude-workflow/scripts/claude-node.mjs dry-run --request tests/fixtures/request.json --pretty",
-    "pack:check": "npm pack --workspace ultraclaude --dry-run --json"
+    "pack:check": "npm pack --workspace ultraclaude --dry-run --json",
+    "build": "node tools/build-validator.mjs",
+    "build:check": "node tools/build-validator.mjs --check",
+    "validate:plugin": "node tools/validate-plugin.mjs"
   },
   "engines": {
     "node": ">=18"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "esbuild": "0.28.2"
+  }
 }

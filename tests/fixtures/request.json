@@ -2,7 +2,6 @@
   "prompt": "Review the fixture without changing files.",
   "cwd": ".",
   "model": "haiku",
-  "effort": "low",
   "timeoutSec": 30,
   "persistSession": false
 }

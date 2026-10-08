@@ -1,7 +1,7 @@
 {
   "name": "ultraclaude",
-  "version": "0.1.0",
-  "description": "Ask a local Claude Code CLI for structured, read-only second opinions while Codex orchestrates.",
+  "version": "0.2.0",
+  "description": "Consult Claude, delegate isolated edits, and run structured cross-model workflows from Codex.",
   "author": {
     "name": "Narcis Ciobotariu",
     "email": "narcisc2007@gmail.com",
@@ -20,20 +20,22 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Ultraclaude",
-    "shortDescription": "Structured second opinions from Claude Code",
-    "longDescription": "Let Codex consult the user's local Claude Code CLI as an independent, read-only reviewer with schema-validated output and explicit failure handling.",
+    "shortDescription": "Claude inside Codex",
+    "longDescription": "Let Codex consult Claude Code or delegate edits in an isolated worktree, with explicit write scopes, model routing, persistent sessions, asynchronous jobs, and validated results. On native Windows, Codex executes verification commands.",
     "developerName": "Narcis Ciobotariu",
     "category": "Developer Tools",
     "capabilities": [
-      "Read"
+      "Read",
+      "Write",
+      "Execute"
     ],
     "websiteURL": "https://github.com/narcis2007/ultraclaude",
     "privacyPolicyURL": "https://github.com/narcis2007/ultraclaude/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/narcis2007/ultraclaude/blob/main/TERMS.md",
     "defaultPrompt": [
-      "Ask Claude to adversarially review this change.",
-      "Get Claude's read-only opinion on this conclusion.",
-      "Have Claude judge these alternatives independently."
+      "Ask Claude to independently review this change.",
+      "Have Claude implement this task in an isolated worktree.",
+      "Cross-check these findings with Claude and reconcile the evidence."
     ],
     "brandColor": "#6D5AE6",
     "composerIcon": "./assets/ultraclaude.svg",

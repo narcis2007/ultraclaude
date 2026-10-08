@@ -1,22 +1,21 @@
 # Privacy policy
 
-Effective: 13 July 2026
+Effective: 7 October 2026
 
-Ultraclaude is local, open-source software. It does not operate a hosted service, create an author
-account, use analytics, or send data to the project author.
+Ultraclaude runs locally and operates no author-hosted service, analytics, or author account.
+Live requests use the user's installed/authenticated Claude Code CLI. Task prompts and the file
+content Claude reads are processed by the configured provider under that account's terms,
+retention, and training controls. Selecting a model does not change that destination.
 
-When a user requests a live review, Ultraclaude launches the Claude Code CLI already installed and
-authenticated on that user's machine. The task prompt and any repository content Claude reads are
-processed by the provider configured in Claude Code. That provider's terms, privacy policy,
-retention controls, and model-training preferences apply.
+Review profiles read files. Opt-in edit/implement profiles also modify authorized workspace paths.
+Sandboxed execution may contact explicitly allowed network hosts. Native Windows verification
+commands run through Codex's tools. Keep secrets out of prompts and model-readable files.
 
-Ultraclaude limits model-visible tools to `Read`, `Glob`, and `Grep`. It does not intentionally
-collect secrets. Users are responsible for selecting an appropriate working directory and for not
-placing credentials, personal information, or other sensitive data in prompts or readable files.
+Claude session persistence is off by default; persistent sessions use Claude's own local storage.
+Async jobs and persistent session scopes create a local ~/.ultraclaude registry (or the operator's
+ULTRACLAUDE_STATE_DIR). It contains task requests, results, workspace information, model usage, and
+minimal progress events. These records are not uploaded to the author. Claude can independently
+write its ordinary operational logs. Retained worktrees and partial changes are not removed
+without a separate cleanup action.
 
-By default, Ultraclaude disables Claude session persistence. If a user explicitly enables
-persistence, Claude Code may store session metadata under its own local application data. Claude
-Code may also write its ordinary logs or operational metadata independently of Ultraclaude.
-
-Questions or privacy reports can be opened at
-<https://github.com/narcis2007/ultraclaude/issues>.
+Privacy questions: https://github.com/narcis2007/ultraclaude/issues
