@@ -1,9 +1,11 @@
 import { readFileSync } from "node:fs";
 
-export const POLICY_DATE = "2026-10-07";
+export const POLICY_DATE = "2026-10-08";
 const ALL_EFFORTS = ["low", "medium", "high", "xhigh", "max"];
 export const MODEL_CATALOG = Object.freeze([
-  { id: "claude-haiku-4-5-20251001", aliases: ["haiku", "claude-haiku-4-5"], efforts: [], minCliVersion: "2.1.0" },
+  // Claude Code resolves the `haiku` alias to Haiku 5.5 (verified on 2.1.293); 4.5 stays reachable by id.
+  { id: "claude-haiku-5-5", aliases: ["haiku"], efforts: ALL_EFFORTS, implicitEffortCap: "medium", minCliVersion: "2.1.293" },
+  { id: "claude-haiku-4-5-20251001", aliases: ["claude-haiku-4-5"], efforts: [], minCliVersion: "2.1.0" },
   { id: "claude-sonnet-5-5", aliases: ["sonnet"], efforts: ALL_EFFORTS, minCliVersion: "2.1.284" },
   { id: "claude-opus-5-5", aliases: ["opus"], efforts: ALL_EFFORTS, minCliVersion: "2.1.280" },
   { id: "claude-fable-5-1", aliases: ["fable"], efforts: ALL_EFFORTS, minCliVersion: "2.1.257" },
@@ -14,7 +16,7 @@ export const MODEL_CATALOG = Object.freeze([
 export const POLICY = Object.freeze({
   date: POLICY_DATE,
   tiers: {
-    light: { model: "claude-haiku-4-5-20251001", effort: null },
+    light: { model: "claude-haiku-5-5", effort: "medium" },
     daily: { model: "claude-sonnet-5-5", effort: "xhigh" },
     final: { model: "claude-opus-5-5", effort: "max" },
     deep: { model: "claude-fable-5-1", effort: "xhigh" },
@@ -54,8 +56,8 @@ export function modelInfo(model, env = process.env) {
   }
   // Provider aliases can resolve to older families with different effort capabilities.
   const enabled = key => env[key] === "1" || env[key] === "true";
-  const providerModel = enabled("CLAUDE_CODE_USE_FOUNDRY") ? { opus: "claude-opus-4-6", sonnet: "claude-sonnet-4-5" }[base] :
-    enabled("CLAUDE_CODE_USE_BEDROCK") || enabled("CLAUDE_CODE_USE_VERTEX") ? { opus: "claude-opus-5-5", sonnet: "claude-sonnet-4-5" }[base] : null;
+  const providerModel = enabled("CLAUDE_CODE_USE_FOUNDRY") ? { opus: "claude-opus-4-6", sonnet: "claude-sonnet-4-5", haiku: "claude-haiku-4-5-20251001" }[base] :
+    enabled("CLAUDE_CODE_USE_BEDROCK") || enabled("CLAUDE_CODE_USE_VERTEX") ? { opus: "claude-opus-5-5", sonnet: "claude-sonnet-4-5", haiku: "claude-haiku-4-5-20251001" }[base] : null;
   if (providerModel) return contextChecked(catalog.find(item => item.id === providerModel));
   return contextChecked(entry);
 }
@@ -74,7 +76,10 @@ export function resolveRoute(raw, env = process.env) {
   const model = raw.model ?? (legacy ? "opus" : thirdParty ? aliases[tier] : POLICY.tiers[tier].model);
   if (typeof model !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._:/\[\]-]{0,511}$/.test(model)) throw new TypeError("request.model contains unsupported characters.");
   const info = modelInfo(model, env);
-  const desiredEffort = legacy ? "max" : POLICY.tiers[tier].effort ?? "high";
+  // A model may cap the effort it gets implicitly (Haiku 5.5: medium; measured 2026-10-08, max cost
+  // ~15x and took ~8x longer without better verdicts). An explicit effort is never capped.
+  const tierEffort = legacy ? "max" : POLICY.tiers[tier].effort ?? "high";
+  const desiredEffort = info.implicitEffortCap && ALL_EFFORTS.indexOf(info.implicitEffortCap) < ALL_EFFORTS.indexOf(tierEffort) ? info.implicitEffortCap : tierEffort;
   const effort = raw.effort ?? (info.efforts.length ? [...ALL_EFFORTS].reverse().find(level => info.efforts.includes(level) && ALL_EFFORTS.indexOf(level) <= ALL_EFFORTS.indexOf(desiredEffort)) : null);
   if (effort !== null && !info.efforts.includes(effort)) {
     throw new TypeError(`request.effort ${effort} is not supported by ${model}${info.efforts.length ? "." : "; omit effort for this model."}`);

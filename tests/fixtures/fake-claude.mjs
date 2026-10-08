@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 const args = process.argv.slice(2);
 
 if (args.includes("--version")) {
-  process.stdout.write("2.1.292 (Fake Claude Code)\n");
+  process.stdout.write("2.1.293 (Fake Claude Code)\n");
   process.exit(0);
 }
 

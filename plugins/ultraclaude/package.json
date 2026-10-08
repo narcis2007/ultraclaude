@@ -1,6 +1,6 @@
 {
   "name": "ultraclaude",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Codex plugin and CLI for Claude consultation, isolated implementation, and workflows.",
   "type": "module",
   "exports": {

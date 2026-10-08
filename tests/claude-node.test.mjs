@@ -99,16 +99,20 @@ test("installs the documented Opus/max defaults", () => {
   assert.equal(request.persistSession, false);
 });
 
-test("omits effort for Haiku and accepts supported explicit effort overrides", () => {
+test("Haiku 5.5 takes effort, Haiku 4.5 omits it, and explicit overrides are validated", () => {
   const request = validateRequest({
     prompt: "Cheap check.",
     cwd: repoRoot,
     model: "haiku",
   });
   assert.equal(request.model, "haiku");
-  assert.equal(request.effort, null);
-  assert.equal(buildClaudeArgs(request).includes("--effort"), false);
-  assert.throws(() => validateRequest({ prompt: "Check", model: "haiku", effort: "low" }), /not supported/);
+  assert.equal(request.effort, "medium", "Haiku 5.5 runs at medium unless the request names an effort, even on the legacy max route");
+  assert.ok(buildClaudeArgs(request).join(" ").includes("--effort medium"));
+  assert.equal(validateRequest({ prompt: "Check", model: "haiku", effort: "low" }).effort, "low");
+  const legacyHaiku = validateRequest({ prompt: "Check", cwd: repoRoot, model: "claude-haiku-4-5" });
+  assert.equal(legacyHaiku.effort, null);
+  assert.equal(buildClaudeArgs(legacyHaiku).includes("--effort"), false);
+  assert.throws(() => validateRequest({ prompt: "Check", model: "claude-haiku-4-5-20251001", effort: "low" }), /not supported/);
   assert.equal(validateRequest({ prompt: "Check", model: "sonnet", effort: "low" }).effort, "low");
 });
 

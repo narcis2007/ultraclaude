@@ -7,7 +7,7 @@ read-only requests. Independent project; not affiliated with Anthropic or OpenAI
 ## Requirements and installation
 
 - Node.js 18+, Codex with plugin support, and authenticated Claude Code.
-- Claude Code 2.1.284+ for the current typed Sonnet default; other models have version checks.
+- Claude Code 2.1.284+ for the current typed Sonnet default and 2.1.293+ for the Haiku 5.5 light tier; other models have version checks.
 - Git for automatic worktrees. Native Windows supports file edits; Codex runs acceptance commands.
 
 ```sh
@@ -31,7 +31,7 @@ Example requests to Codex:
 | Request | Model | Effort |
 |---|---|---|
 | Legacy: no mode/kind/tier | opus alias | max |
-| light | Haiku 4.5 | omitted |
+| light | Haiku 5.5 | medium |
 | daily | Sonnet 5.5 | xhigh |
 | final | Opus 5.5 | max |
 | deep, explicit | Fable 5.1 | xhigh |
@@ -68,10 +68,10 @@ A legacy read-only review remains:
 {"prompt":"Review this conclusion.","cwd":"/absolute/repo","persistSession":false}
 ```
 
-A Haiku check omits effort:
+A Haiku 5.5 check (medium effort unless the request names one; low through max are accepted):
 
 ```json
-{"prompt":"Check this narrow conclusion.","cwd":"/absolute/repo","model":"haiku"}
+{"prompt":"Check this narrow conclusion.","cwd":"/absolute/repo","model":"haiku","effort":"high"}
 ```
 
 ## Delegated implementation

@@ -7,7 +7,7 @@ Skills: claude-ask, claude-review, claude-implement, claude-workflow.
 Runner: skills/claude-workflow/scripts/claude-node.mjs (also the ultraclaude npm CLI).
 
 Default legacy requests stay read-only Opus/max. Typed daily requests use Sonnet 5.5/xhigh;
-final uses Opus 5.5/max; light uses Haiku without effort; deep explicitly selects Fable 5.1/xhigh.
+final uses Opus 5.5/max; light uses Haiku 5.5/medium; deep explicitly selects Fable 5.1/xhigh.
 Account availability is not inferred from the catalog. Actual modelUsage is retained.
 
 Writing is opt-in through mode:edit/implement and defaults to an isolated git worktree.

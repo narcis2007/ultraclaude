@@ -20,7 +20,7 @@ names are claude-review, crosscheck, cross-review, and judge-panel. Write the wo
 a file and use `start --request "<file>"`; poll `wait <runId> --max-wait 10`, inspect `status`, and
 read `result`. Keep failures unverified. Never interpret a missing stage as agreement.
 
-Model policy: light = Haiku without effort; daily = Sonnet 5.5/xhigh; final = Opus 5.5/max;
+Model policy: light = Haiku 5.5/medium; daily = Sonnet 5.5/xhigh; final = Opus 5.5/max;
 deep = explicitly selected Fable 5.1/xhigh. Read [model policy](references/model-policy.md) for
 provider aliases, explicit overrides, and availability. A model selection never grants writes.
 

@@ -46,7 +46,9 @@ test("supports custom schema references and rejects unresolved references before
 test("routes typed requests while preserving legacy quality defaults", () => {
   assert.equal(validateRequest({ prompt: "p" }).model, "opus");
   const daily = validateRequest({ prompt: "p", kind: "ask" }); assert.equal(daily.model, "claude-sonnet-5-5"); assert.equal(daily.effort, "xhigh");
-  assert.equal(validateRequest({ prompt: "p", kind: "verify", tier: "light" }).effort, null);
+  const light = validateRequest({ prompt: "p", kind: "verify", tier: "light" });
+  assert.equal(light.model, "claude-haiku-5-5"); assert.equal(light.effort, "medium");
+  assert.equal(validateRequest({ prompt: "p", kind: "verify", tier: "light", effort: "max" }).effort, "max");
   assert.equal(validateRequest({ prompt: "p", kind: "review", tier: "final" }).model, "claude-opus-5-5");
   assert.equal(validateRequest({ prompt: "p", kind: "ask", tier: "deep" }).model, "claude-fable-5-1");
   assert.equal(validateRequest({ prompt: "p", kind: "ask", model: "opus", effort: "high" }).effort, "high");
@@ -65,6 +67,10 @@ test("validates effort against provider alias targets instead of first-party def
     assert.equal(validateRequest(daily, { env: pinned }).effort, "xhigh");
   }
   assert.equal(validateRequest({ ...daily, tier: "final" }, { env: { CLAUDE_CODE_USE_FOUNDRY: "1" } }).effort, "max");
+  for (const provider of ["CLAUDE_CODE_USE_BEDROCK", "CLAUDE_CODE_USE_VERTEX", "CLAUDE_CODE_USE_FOUNDRY"]) {
+    const light = validateRequest({ prompt: "p", kind: "verify", tier: "light" }, { env: { [provider]: "1" } });
+    assert.equal(light.model, "haiku"); assert.equal(light.effort, null, "provider haiku aliases keep Haiku 4.5 semantics");
+  }
 });
 test("supports operator deployment catalogs without trusting executable/model definitions in requests", async t => {
   const { root } = await fixture(t); const catalog = path.join(root, "models.json");
