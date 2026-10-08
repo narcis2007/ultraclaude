@@ -9,6 +9,8 @@
   max cost about 15x and took about 8x longer than high without better verdicts);
   Haiku 4.5 stays available by id (`claude-haiku-4-5-20251001`, `claude-haiku-4-5`) without
   effort. Provider aliases (Bedrock, Vertex, Foundry) keep Haiku 4.5 semantics until pinned.
+- An alias registered in the operator catalog now wins over the built-in provider fallback
+  (for `haiku`, `sonnet` and `opus` alike).
 
 ## 0.2.0 - 2026-10-07
 

@@ -79,6 +79,18 @@ test("supports operator deployment catalogs without trusting executable/model de
   assert.equal(validateRequest({ prompt: "p", model: "arn:aws:bedrock:region:account:inference-profile/custom", effort: "high" }, { env }).effort, "high");
   assert.throws(() => validateRequest({ prompt: "p", modelCatalog: catalog }), /Unknown/);
 });
+test("an operator-registered haiku alias wins over the provider fallback", async t => {
+  const { root } = await fixture(t); const catalog = path.join(root, "models.json");
+  await writeFile(catalog, JSON.stringify([{ id: "provider-haiku-5-5", aliases: ["haiku"], efforts: ["medium", "high", "max"], implicitEffortCap: "medium", minCliVersion: "2.1.293" }]));
+  for (const provider of ["CLAUDE_CODE_USE_BEDROCK", "CLAUDE_CODE_USE_VERTEX", "CLAUDE_CODE_USE_FOUNDRY"]) {
+    const env = { [provider]: "1", ULTRACLAUDE_MODEL_CATALOG: catalog };
+    const light = validateRequest({ prompt: "p", kind: "verify", tier: "light" }, { env });
+    assert.equal(light.effort, "medium"); assert.equal(light.minCliVersion, "2.1.293");
+    assert.equal(validateRequest({ prompt: "p", kind: "verify", tier: "light", effort: "high" }, { env }).effort, "high");
+    // without the operator entry the conservative Haiku 4.5 fallback still applies
+    assert.equal(validateRequest({ prompt: "p", kind: "verify", tier: "light" }, { env: { [provider]: "1" } }).effort, null);
+  }
+});
 test("write profiles use scoped Edit rules for both Edit and Write, without permission bypass", () => {
   const request = validateRequest({ prompt: "p", mode: "edit", isolation: "direct", allowedPaths: ["src", "package.json"] });
   const args = buildClaudeArgs(request); const allowed = args[args.indexOf("--allowed-tools") + 1];

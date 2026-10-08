@@ -58,7 +58,8 @@ export function modelInfo(model, env = process.env) {
   const enabled = key => env[key] === "1" || env[key] === "true";
   const providerModel = enabled("CLAUDE_CODE_USE_FOUNDRY") ? { opus: "claude-opus-4-6", sonnet: "claude-sonnet-4-5", haiku: "claude-haiku-4-5-20251001" }[base] :
     enabled("CLAUDE_CODE_USE_BEDROCK") || enabled("CLAUDE_CODE_USE_VERTEX") ? { opus: "claude-opus-5-5", sonnet: "claude-sonnet-4-5", haiku: "claude-haiku-4-5-20251001" }[base] : null;
-  if (providerModel) return contextChecked(catalog.find(item => item.id === providerModel));
+  // The fallback describes the built-in aliases only: an alias the operator catalog registers wins.
+  if (providerModel && MODEL_CATALOG.includes(entry)) return contextChecked(catalog.find(item => item.id === providerModel));
   return contextChecked(entry);
 }
 

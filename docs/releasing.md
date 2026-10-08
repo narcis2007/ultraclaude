@@ -8,7 +8,7 @@
 3. Run the available official Codex skill validator for all four skills and the repository plugin validator; use the official plugin validator too when installed.
 4. Install the generated tarball in an empty directory and execute `schema`, `preflight`, and
    `dry-run` through its generated npm bin shim.
-5. Run one explicitly approved live smoke test on Haiku without an effort field.
+5. Run one explicitly approved live smoke test on the light tier (Haiku 5.5 at its default medium effort).
 
 ## npm
 
